@@ -1,10 +1,10 @@
-package com.example.proyectomovil
+package com.example.aplicacionmovil
 
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
@@ -13,24 +13,26 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Conectar elementos del XML
         val txtNombre = findViewById<EditText>(R.id.txtNombre)
         val btnEnviar = findViewById<Button>(R.id.btnEnviar)
         val lblTexto = findViewById<TextView>(R.id.lblTexto)
 
+        // Evento del botón
         btnEnviar.setOnClickListener {
 
             // Obtener texto de la caja
             val texto = txtNombre.text.toString()
 
-            // Pasar texto al label
+            // Mostrar texto en el label
             lblTexto.text = texto
 
-            // Mostrar alerta popup
-            Toast.makeText(
-                this,
-                "Texto enviado con éxito",
-                Toast.LENGTH_SHORT
-            ).show()
+            // Mostrar alerta bonita
+            AlertDialog.Builder(this)
+                .setTitle("Éxito")
+                .setMessage("El texto fue enviado correctamente")
+                .setPositiveButton("Aceptar", null)
+                .show()
         }
     }
 }

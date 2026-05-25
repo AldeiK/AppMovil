@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "AplicacionMovil"
 include(":app")
+include(":reloj")

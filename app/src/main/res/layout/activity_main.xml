@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="20dp"
-    tools:context=".MainActivity">
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="#E3F2FD">
+
+    <!-- Título -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mi Aplicación"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:textColor="#1565C0"
+        android:layout_marginBottom="30dp"/>
 
     <!-- Caja de texto -->
     <EditText
         android:id="@+id/txtNombre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Escribe un texto"/>
+        android:hint="Escribe un mensaje"
+        android:textSize="18sp"
+        android:padding="15dp"
+        android:backgroundTint="#1565C0"/>
 
     <!-- Botón -->
     <Button
@@ -21,15 +34,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Enviar"
-        android:layout_marginTop="20dp"/>
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="25dp"
+        android:padding="12dp"
+        android:backgroundTint="#1976D2"
+        android:textColor="#FFFFFF"/>
 
     <!-- Label -->
     <TextView
         android:id="@+id/lblTexto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Aquí aparecerá el texto"
-        android:textSize="20sp"
-        android:layout_marginTop="20dp"/>
+        android:text="Aquí aparecerá el mensaje"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#0D47A1"
+        android:layout_marginTop="35dp"/>
 
 </LinearLayout>
