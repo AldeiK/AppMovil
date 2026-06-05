@@ -15,10 +15,10 @@
       </SelectionState>
       <SelectionState runConfigName="reloj">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-05-18T16:42:11.136378600Z">
+        <DropdownSelection timestamp="2026-06-05T15:42:30.236451400Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=HA1M0KX8" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\ridol\.android\avd\Wear_OS_Large_Round.avd" />
             </handle>
           </Target>
         </DropdownSelection>

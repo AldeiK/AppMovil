@@ -59,7 +59,7 @@
             android:id="@+id/boton"
             android:layout_width="170dp"
             android:layout_height="50dp"
-            android:text="Saludar"
+            android:text="@string/abrir_chat"
             android:textAllCaps="false"
             android:textSize="16sp"
             android:textStyle="bold"

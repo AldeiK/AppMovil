@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.wear.tooling.preview)
+    implementation(libs.androidx.wear)
     implementation(libs.compose.ui.tooling)
     implementation(libs.play.services.wearable)
     androidTestImplementation(platform(libs.androidx.compose.bom))

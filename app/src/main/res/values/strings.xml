@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">AplicacionMovil</string>
+    <string name="enviar">Enviar</string>
+    <string name="escribe_un_mensaje">Escribe un mensaje</string>
+    <string name="esperando_mensaje">Aquí aparecerá el mensaje</string>
+    <string name="titulo_app">Chat con Reloj</string>
 </resources>

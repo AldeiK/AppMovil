@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Reloj</string>
-    <string name="hello_world">Hello, %1$s!</string>
+    <string name="hello_world">Hola, %1$s!</string>
+    <string name="abrir_chat">Abrir Chat</string>
+    <string name="enviar">Enviar</string>
+    <string name="mensaje_hint">Mensaje</string>
+    <string name="esperando_mensaje">Esperando mensaje...</string>
+    <string name="chat_con_celular">Chat con Celular</string>
 </resources>

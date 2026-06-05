@@ -6,56 +6,106 @@
     android:layout_height="match_parent"
     android:background="#070B1A">
 
-    <LinearLayout
-        android:layout_width="220dp"
-        android:layout_height="220dp"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:background="#11182D"
-        android:padding="20dp"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🚀"
-            android:textSize="45sp"/>
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Segunda Pantalla"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:layout_marginTop="10dp"/>
+            <!-- ICONO -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🚀"
+                android:textSize="30sp"/>
 
-        <!-- BOTÓN REPRODUCIR -->
-        <Button
-            android:id="@+id/botonAudio"
-            android:layout_width="160dp"
-            android:layout_height="48dp"
-            android:text="▶ Reproducir"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#3949AB"
-            android:layout_marginTop="20dp"/>
+            <!-- TITULO -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chat_con_celular"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"/>
 
-        <!-- BOTÓN VOLVER -->
-        <Button
-            android:id="@+id/volver"
-            android:layout_width="140dp"
-            android:layout_height="48dp"
-            android:text="Volver"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#6C63FF"
-            android:layout_marginTop="20dp"/>
+            <!-- CHAT DISPLAY -->
+            <TextView
+                android:id="@+id/textChatRecibido"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/esperando_mensaje"
+                android:textColor="#B8C1EC"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="#11182D"
+                android:padding="8dp"/>
 
-    </LinearLayout>
+            <!-- INPUT -->
+            <EditText
+                android:id="@+id/editChat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/mensaje_hint"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#555555"
+                android:textSize="14sp"
+                android:layout_marginTop="10dp"
+                android:inputType="textShortMessage"
+                android:autofillHints="none"/>
+
+            <Button
+                android:id="@+id/btnEnviarChat"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="@string/enviar"
+                android:textAllCaps="false"
+                android:backgroundTint="#3949AB"
+                android:layout_marginTop="5dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#333333"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"/>
+
+            <!-- SENSOR (MANTENIDO) -->
+            <TextView
+                android:id="@+id/textSensor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sensor: 0"
+                android:textColor="#E91E63"
+                android:textStyle="bold"
+                android:textSize="14sp"/>
+
+            <!-- BOTONES ANTERIORES -->
+            <Button
+                android:id="@+id/botonAudio"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="▶ Audio"
+                android:textAllCaps="false"
+                android:backgroundTint="#3949AB"
+                android:layout_marginTop="10dp"/>
+
+            <Button
+                android:id="@+id/volver"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="Volver"
+                android:textAllCaps="false"
+                android:backgroundTint="#6C63FF"
+                android:layout_marginTop="10dp"/>
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
