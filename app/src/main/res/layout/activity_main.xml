@@ -30,17 +30,30 @@
         android:inputType="textShortMessage"
         android:autofillHints="none"/>
 
-    <!-- Botón -->
+    <!-- Botón Enviar al Reloj -->
     <Button
         android:id="@+id/btnEnviar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/enviar"
+        android:text="Enviar al Reloj"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginTop="25dp"
         android:padding="12dp"
         android:backgroundTint="#1976D2"
+        android:textColor="#FFFFFF"/>
+
+    <!-- Botón Guardar en BD -->
+    <Button
+        android:id="@+id/btnGuardarBD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Guardar en Base de Datos"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:padding="12dp"
+        android:backgroundTint="#2E7D32"
         android:textColor="#FFFFFF"/>
 
     <!-- Label -->
