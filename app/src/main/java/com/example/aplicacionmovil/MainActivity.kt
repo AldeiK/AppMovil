@@ -19,11 +19,12 @@ class MainActivity : AppCompatActivity(), MessageClient.OnMessageReceivedListene
     private lateinit var txtNombre: EditText
     private lateinit var btnEnviar: Button
     private lateinit var btnGuardarBD: Button
+    private lateinit var btnConsultar: Button
     private lateinit var lblTexto: TextView
     private val CHAT_PATH = "/chat"
 
-    // URL de tu API (Cámbiala por la de Render cuando la tengas)
-    private val API_URL = "https://tu-api-en-render.com/guardar"
+    // URL de tu API en Render
+    private val API_URL = "https://appmovil-2gf6.onrender.com/guardar"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity(), MessageClient.OnMessageReceivedListene
         txtNombre = findViewById(R.id.txtNombre)
         btnEnviar = findViewById(R.id.btnEnviar)
         btnGuardarBD = findViewById(R.id.btnGuardarBD)
+        btnConsultar = findViewById(R.id.btnConsultar)
         lblTexto = findViewById(R.id.lblTexto)
 
         // Botón para el Reloj
@@ -61,9 +63,13 @@ class MainActivity : AppCompatActivity(), MessageClient.OnMessageReceivedListene
                 txtNombre.text.clear()
             }
         }
-        
-        // Probar GET al iniciar
-        get("https://jsonplaceholder.typicode.com/todos/1")
+
+        // Botón para Consultar (Tarea API GET)
+        btnConsultar.setOnClickListener {
+            // Usamos la nueva ruta de tu servidor en Render
+            get("https://appmovil-2gf6.onrender.com/ultimo")
+            lblTexto.text = "Consultando último mensaje..."
+        }
     }
 
     override fun onResume() {
@@ -91,16 +97,29 @@ class MainActivity : AppCompatActivity(), MessageClient.OnMessageReceivedListene
             override fun onFailure(call: Call, e: IOException) {
                 // Manejo de error
                 Log.d("FETCH", "Error: ${e.message}")
+                runOnUiThread {
+                    lblTexto.text = "Error GET: No se pudo conectar"
+                }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 response.use {
-                    if (!response.isSuccessful) {
-                        Log.d("FETCH", "Error en la respuesta: ${response.code}")
-                    } else {
-                        // Aquí se maneja la respuesta, por ejemplo, convertirla en String
-                        val responseData = response.body?.string()
-                        Log.d("FETCH", "Respuesta GET: $responseData")
+                    val responseData = response.body?.string()
+                    Log.d("FETCH", "Respuesta GET: $responseData")
+                    
+                    runOnUiThread {
+                        if (!response.isSuccessful) {
+                            lblTexto.text = "Error GET: ${response.code}"
+                        } else {
+                            try {
+                                // Extraer el mensaje del JSON recibido
+                                val json = org.json.JSONObject(responseData ?: "{}")
+                                val mensaje = json.optString("mensaje", "Sin mensaje")
+                                lblTexto.text = "Último: $mensaje"
+                            } catch (e: Exception) {
+                                lblTexto.text = "Error al leer datos"
+                            }
+                        }
                     }
                 }
             }

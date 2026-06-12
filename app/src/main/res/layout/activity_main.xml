@@ -43,17 +43,30 @@
         android:backgroundTint="#1976D2"
         android:textColor="#FFFFFF"/>
 
-    <!-- Botón Guardar en BD -->
+    <!-- Botón Guardar en BD (POST) -->
     <Button
         android:id="@+id/btnGuardarBD"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Guardar en Base de Datos"
+        android:text="Guardar en BD (POST)"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginTop="10dp"
         android:padding="12dp"
         android:backgroundTint="#2E7D32"
+        android:textColor="#FFFFFF"/>
+
+    <!-- Botón Consultar BD (GET) -->
+    <Button
+        android:id="@+id/btnConsultar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Consultar API (GET)"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:padding="12dp"
+        android:backgroundTint="#F57C00"
         android:textColor="#FFFFFF"/>
 
     <!-- Label -->

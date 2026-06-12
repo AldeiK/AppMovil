@@ -41,6 +41,20 @@ app.post('/guardar', async (req, res) => {
     }
 });
 
+// Ruta para obtener el último mensaje (GET)
+app.get('/ultimo', async (req, res) => {
+    try {
+        const ultimoMensaje = await Mensaje.findOne().sort({ _id: -1 });
+        if (ultimoMensaje) {
+            res.status(200).send(ultimoMensaje);
+        } else {
+            res.status(404).send({ status: "error", message: "No hay mensajes" });
+        }
+    } catch (error) {
+        res.status(500).send({ status: "error", message: error.message });
+    }
+});
+
 // Ruta de prueba (GET)
 app.get('/', (req, res) => {
     res.send("Servidor de la Clase de Aplicaciones Móviles - Operativo");
