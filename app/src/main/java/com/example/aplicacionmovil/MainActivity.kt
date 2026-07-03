@@ -59,20 +59,35 @@ class MainActivity : AppCompatActivity(), MessageClient.OnMessageReceivedListene
                     "Movimiento" -> lblMovimiento.text = "⌚ Mov: ${String.format("%.2f", valor.toFloat())}"
                     "Luz" -> lblLuz.text = "💡 Luz: ${valor.toFloat().toInt()} lx"
                 }
-                lblStatus.text = "Enviando $tipo a MongoDB..."
+                // Solo mostrar "Enviando" si no hay un error previo bloqueando la pantalla
+                if (!lblStatus.text.startsWith("❌")) {
+                    lblStatus.text = "Enviando $tipo a MongoDB..."
+                }
             }
 
             // FILTRO: Solo enviar a MongoDB cada 3 segundos para no saturar
             val ahora = System.currentTimeMillis()
             if (ahora - ultimoEnvio > 3000) {
                 ultimoEnvio = ahora
+                
+                // Determinamos la unidad de medida según el sensor
+                val unidad = when(tipo) {
+                    "Corazon" -> "BPM"
+                    "Movimiento" -> "m/s²"
+                    "Luz" -> "lx"
+                    else -> ""
+                }
+
                 val json = """
                     {
-                        "usuario": "Reloj_$tipo",
-                        "mensaje": "$valor",
+                        "sensor": "$tipo",
+                        "valor": "$valor",
+                        "unidad": "$unidad",
+                        "dispositivo": "Reloj_JoseRodolfo",
                         "fecha": "$ahora"
                     }
                 """.trimIndent()
+
                 post(API_URL, json)
             }
         }
@@ -91,6 +106,9 @@ class MainActivity : AppCompatActivity(), MessageClient.OnMessageReceivedListene
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("ERROR_BD", "Fallo total: ${e.message}")
+                runOnUiThread {
+                    lblStatus.text = "❌ Error: ${e.message}"
+                }
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -99,6 +117,11 @@ class MainActivity : AppCompatActivity(), MessageClient.OnMessageReceivedListene
                     runOnUiThread {
                         lblStatus.text = "✅ Sincronizado con MongoDB"
                         enviarConfirmacionAReloj()
+                    }
+                } else {
+                    Log.e("ERROR_BD", "Error servidor: ${response.code}")
+                    runOnUiThread {
+                        lblStatus.text = "⚠️ Error Servidor: ${response.code}"
                     }
                 }
                 response.close()
