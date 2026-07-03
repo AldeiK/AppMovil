@@ -15,14 +15,25 @@ import java.nio.charset.StandardCharsets
 
 class MainActivity : AppCompatActivity(), MessageClient.OnMessageReceivedListener {
 
-    private lateinit var lblTexto: TextView
+    private lateinit var lblRitmo: TextView
+    private lateinit var lblMovimiento: TextView
+    private lateinit var lblLuz: TextView
+    private lateinit var lblStatus: TextView
+    
     private val API_URL = "https://appmovil-2gf6.onrender.com/guardar"
+    
+    // Instancia única de OkHttp para no saturar el sistema
+    private val client = OkHttpClient()
+    private var ultimoEnvio: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        lblTexto = findViewById(R.id.lblTexto)
-        lblTexto.text = "Esperando datos del Reloj..."
+        
+        lblRitmo = findViewById(R.id.lblRitmo)
+        lblMovimiento = findViewById(R.id.lblMovimiento)
+        lblLuz = findViewById(R.id.lblLuz)
+        lblStatus = findViewById(R.id.lblStatus)
     }
 
     override fun onResume() {
@@ -43,37 +54,63 @@ class MainActivity : AppCompatActivity(), MessageClient.OnMessageReceivedListene
             val valor = partes[1]
 
             runOnUiThread {
-                lblTexto.text = "Recibido: $tipo -> $valor"
+                when (tipo) {
+                    "Corazon" -> lblRitmo.text = "❤️ Ritmo: ${valor.toFloat().toInt()} BPM"
+                    "Movimiento" -> lblMovimiento.text = "⌚ Mov: ${String.format("%.2f", valor.toFloat())}"
+                    "Luz" -> lblLuz.text = "💡 Luz: ${valor.toFloat().toInt()} lx"
+                }
+                lblStatus.text = "Enviando $tipo a MongoDB..."
             }
 
-            // GUARDAR AUTOMÁTICAMENTE EN LA BD
-            val json = """
-                {
-                    "usuario": "Reloj_$tipo",
-                    "mensaje": "$valor",
-                    "fecha": "${System.currentTimeMillis()}"
-                }
-            """.trimIndent()
-            
-            post(API_URL, json)
+            // FILTRO: Solo enviar a MongoDB cada 3 segundos para no saturar
+            val ahora = System.currentTimeMillis()
+            if (ahora - ultimoEnvio > 3000) {
+                ultimoEnvio = ahora
+                val json = """
+                    {
+                        "usuario": "Reloj_$tipo",
+                        "mensaje": "$valor",
+                        "fecha": "$ahora"
+                    }
+                """.trimIndent()
+                post(API_URL, json)
+            }
         }
     }
 
     fun post(url: String, jsonBody: String) {
-        val client = OkHttpClient()
         val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()
         val body = jsonBody.toRequestBody(JSON)
-        val request = Request.Builder().url(url).post(body).build()
+        
+        val request = Request.Builder()
+            .url(url)
+            .post(body)
+            .addHeader("Content-Type", "application/json")
+            .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.e("BD", "Error al guardar: ${e.message}")
+                Log.e("ERROR_BD", "Fallo total: ${e.message}")
             }
 
             override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    Log.d("EXITO_BD", "Guardado en la nube")
+                    runOnUiThread {
+                        lblStatus.text = "✅ Sincronizado con MongoDB"
+                        enviarConfirmacionAReloj()
+                    }
+                }
                 response.close()
-                Log.d("BD", "Dato guardado en la nube")
             }
         })
+    }
+
+    private fun enviarConfirmacionAReloj() {
+        Wearable.getNodeClient(this).connectedNodes.addOnSuccessListener { nodes ->
+            for (node in nodes) {
+                Wearable.getMessageClient(this).sendMessage(node.id, "/status", "OK".toByteArray())
+            }
+        }
     }
 }

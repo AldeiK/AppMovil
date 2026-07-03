@@ -1,83 +1,229 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp"
-    android:background="#E3F2FD">
+    android:background="#070B1A">
 
-    <!-- Título -->
+    <!-- Header -->
+    <View
+        android:id="@+id/headerBg"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="#1E293B"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="HEALTH MONITOR"
+        android:textColor="#38BDF8"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:layout_marginTop="50dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/titulo_app"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:textColor="#1565C0"
-        android:layout_marginBottom="30dp"/>
+        android:text="Sincronización en tiempo real"
+        android:textColor="#94A3B8"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Caja de texto -->
-    <EditText
-        android:id="@+id/txtNombre"
+    <!-- Contenedor de Tarjetas -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/escribe_un_mensaje"
-        android:textSize="18sp"
-        android:padding="15dp"
-        android:backgroundTint="#1565C0"
-        android:inputType="textShortMessage"
-        android:autofillHints="none"/>
+        android:orientation="vertical"
+        android:padding="20dp"
+        app:layout_constraintTop_toBottomOf="@id/headerBg"
+        android:layout_marginTop="-40dp">
 
-    <!-- Botón Enviar al Reloj -->
-    <Button
-        android:id="@+id/btnEnviar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Enviar al Reloj"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginTop="25dp"
-        android:padding="12dp"
-        android:backgroundTint="#1976D2"
-        android:textColor="#FFFFFF"/>
+        <!-- Card Ritmo -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="#111827"
+            app:strokeWidth="1dp"
+            app:strokeColor="#334155">
 
-    <!-- Botón Guardar en BD (POST) -->
-    <Button
-        android:id="@+id/btnGuardarBD"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Guardar en BD (POST)"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginTop="10dp"
-        android:padding="12dp"
-        android:backgroundTint="#2E7D32"
-        android:textColor="#FFFFFF"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="20dp"
+                android:gravity="center_vertical">
 
-    <!-- Botón Consultar BD (GET) -->
-    <Button
-        android:id="@+id/btnConsultar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Consultar API (GET)"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginTop="10dp"
-        android:padding="12dp"
-        android:backgroundTint="#F57C00"
-        android:textColor="#FFFFFF"/>
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:text="❤️"
+                    android:textSize="35sp"
+                    android:gravity="center"
+                    android:background="#1E293B"
+                    android:padding="10dp"/>
 
-    <!-- Label -->
-    <TextView
-        android:id="@+id/lblTexto"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="20dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="RITMO CARDÍACO"
+                        android:textColor="#94A3B8"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/lblRitmo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-- BPM"
+                        android:textColor="#F43F5E"
+                        android:textSize="24sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Card Movimiento -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="#111827"
+            app:strokeWidth="1dp"
+            app:strokeColor="#334155">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="20dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:text="⌚"
+                    android:textSize="35sp"
+                    android:gravity="center"
+                    android:background="#1E293B"
+                    android:padding="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="20dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="MOVIMIENTO"
+                        android:textColor="#94A3B8"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/lblMovimiento"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-- m/s²"
+                        android:textColor="#10B981"
+                        android:textSize="24sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Card Luz -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="#111827"
+            app:strokeWidth="1dp"
+            app:strokeColor="#334155">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="20dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:text="💡"
+                    android:textSize="35sp"
+                    android:gravity="center"
+                    android:background="#1E293B"
+                    android:padding="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="20dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ILUMINACIÓN"
+                        android:textColor="#94A3B8"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/lblLuz"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-- lx"
+                        android:textColor="#F59E0B"
+                        android:textSize="24sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <!-- Status Pill -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/esperando_mensaje"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:textColor="#0D47A1"
-        android:layout_marginTop="35dp"/>
+        app:cardCornerRadius="20dp"
+        app:cardBackgroundColor="#1E293B"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:strokeWidth="1dp"
+        app:strokeColor="#38BDF8">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/lblStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buscando reloj..."
+            android:textColor="#38BDF8"
+            android:textSize="12sp"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="8dp"
+            android:textStyle="bold"/>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

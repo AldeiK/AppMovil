@@ -3,65 +3,36 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Conexión a MongoDB Atlas
-// NOTA: La variable MONGO_URI se configura en el panel de Render
+// Forzamos la conexión a una base de datos específica llamada 'JoseRodolfoDB'
 const mongoURI = process.env.MONGO_URI;
 
-if (!mongoURI) {
-    console.error("ERROR: No se ha configurado la variable MONGO_URI en el servidor.");
-}
+mongoose.connect(mongoURI, { dbName: 'JoseRodolfoDB' })
+    .then(() => console.log("✅ CONECTADO A MONGODB - BD: JoseRodolfoDB"))
+    .catch(err => console.error("❌ ERROR MONGO:", err));
 
-mongoose.connect(mongoURI)
-    .then(() => console.log("✅ Conectado exitosamente a MongoDB Atlas"))
-    .catch(err => console.error("❌ Error de conexión a MongoDB:", err));
-
-// Esquema de la Base de Datos
-const MensajeSchema = new mongoose.Schema({
+const Mensaje = mongoose.model('Mensaje', {
     usuario: String,
     mensaje: String,
     fecha: String
 });
 
-const Mensaje = mongoose.model('Mensaje', MensajeSchema);
-
-// Ruta para recibir datos del Celular
 app.post('/guardar', async (req, res) => {
     try {
-        console.log("📥 Recibido del celular:", req.body);
-        const nuevoMensaje = new Mensaje(req.body);
-        await nuevoMensaje.save();
-        res.status(201).send({ status: "success", message: "Mensaje guardado en la nube" });
+        console.log("📥 DATO RECIBIDO:", req.body);
+        const nuevo = new Mensaje(req.body);
+        const guardado = await nuevo.save();
+        console.log("💾 GUARDADO CON ID:", guardado._id);
+        res.status(201).send({ status: "success", id: guardado._id });
     } catch (error) {
-        console.error("❌ Error al guardar:", error);
-        res.status(500).send({ status: "error", message: error.message });
+        console.error("❌ ERROR AL GUARDAR:", error);
+        res.status(500).send({ status: "error" });
     }
 });
 
-// Ruta para obtener el último mensaje (GET)
-app.get('/ultimo', async (req, res) => {
-    try {
-        const ultimoMensaje = await Mensaje.findOne().sort({ _id: -1 });
-        if (ultimoMensaje) {
-            res.status(200).send(ultimoMensaje);
-        } else {
-            res.status(404).send({ status: "error", message: "No hay mensajes" });
-        }
-    } catch (error) {
-        res.status(500).send({ status: "error", message: error.message });
-    }
-});
+app.get('/', (req, res) => { res.send("Servidor Activo"); });
 
-// Ruta de prueba (GET)
-app.get('/', (req, res) => {
-    res.send("Servidor de la Clase de Aplicaciones Móviles - Operativo");
-});
-
-// Iniciar servidor
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
-});
+app.listen(PORT, () => console.log(`🚀 Puerto ${PORT}`));
