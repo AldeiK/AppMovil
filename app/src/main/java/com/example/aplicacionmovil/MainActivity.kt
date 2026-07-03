@@ -21,10 +21,7 @@ class MainActivity : AppCompatActivity(), MessageClient.OnMessageReceivedListene
     private lateinit var lblStatus: TextView
     
     private val API_URL = "https://appmovil-2gf6.onrender.com/guardar"
-    
-    // Instancia única de OkHttp para no saturar el sistema
     private val client = OkHttpClient()
-    private var ultimoEnvio: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,81 +44,51 @@ class MainActivity : AppCompatActivity(), MessageClient.OnMessageReceivedListene
     }
 
     override fun onMessageReceived(messageEvent: MessageEvent) {
-        if (messageEvent.path == "/sensores") {
+        if (messageEvent.path == "/sensores_triples") {
             val dato = String(messageEvent.data, StandardCharsets.UTF_8)
             val partes = dato.split(":")
-            val tipo = partes[0]
-            val valor = partes[1]
+            if (partes.size < 3) return
+            
+            val ritmo = partes[0]
+            val mov = partes[1]
+            val luz = partes[2]
 
             runOnUiThread {
-                when (tipo) {
-                    "Corazon" -> lblRitmo.text = "❤️ Ritmo: ${valor.toFloat().toInt()} BPM"
-                    "Movimiento" -> lblMovimiento.text = "⌚ Mov: ${String.format("%.2f", valor.toFloat())}"
-                    "Luz" -> lblLuz.text = "💡 Luz: ${valor.toFloat().toInt()} lx"
-                }
-                // Solo mostrar "Enviando" si no hay un error previo bloqueando la pantalla
-                if (!lblStatus.text.startsWith("❌")) {
-                    lblStatus.text = "Enviando $tipo a MongoDB..."
-                }
+                lblRitmo.text = "❤️ Ritmo: $ritmo BPM"
+                lblMovimiento.text = "⌚ Mov: $mov m/s²"
+                lblLuz.text = "💡 Luz: $luz lx"
+                lblStatus.text = "Enviando Reporte Triple..."
             }
 
-            // FILTRO: Solo enviar a MongoDB cada 3 segundos para no saturar
-            val ahora = System.currentTimeMillis()
-            if (ahora - ultimoEnvio > 3000) {
-                ultimoEnvio = ahora
-                
-                // Determinamos la unidad de medida según el sensor
-                val unidad = when(tipo) {
-                    "Corazon" -> "BPM"
-                    "Movimiento" -> "m/s²"
-                    "Luz" -> "lx"
-                    else -> ""
+            val json = """
+                {
+                    "ritmo": "$ritmo",
+                    "movimiento": "$mov",
+                    "luz": "$luz",
+                    "dispositivo": "Reloj_JoseRodolfo",
+                    "fecha": "${System.currentTimeMillis()}"
                 }
-
-                val json = """
-                    {
-                        "sensor": "$tipo",
-                        "valor": "$valor",
-                        "unidad": "$unidad",
-                        "dispositivo": "Reloj_JoseRodolfo",
-                        "fecha": "$ahora"
-                    }
-                """.trimIndent()
-
-                post(API_URL, json)
-            }
+            """.trimIndent()
+            
+            post(API_URL, json)
         }
     }
 
     fun post(url: String, jsonBody: String) {
         val JSON = "application/json; charset=utf-8".toMediaTypeOrNull()
         val body = jsonBody.toRequestBody(JSON)
-        
-        val request = Request.Builder()
-            .url(url)
-            .post(body)
-            .addHeader("Content-Type", "application/json")
-            .build()
+        val request = Request.Builder().url(url).post(body).build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.e("ERROR_BD", "Fallo total: ${e.message}")
-                runOnUiThread {
-                    lblStatus.text = "❌ Error: ${e.message}"
-                }
+                Log.e("ERROR", e.message ?: "Error")
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    Log.d("EXITO_BD", "Guardado en la nube")
                     runOnUiThread {
-                        lblStatus.text = "✅ Sincronizado con MongoDB"
+                        lblStatus.text = "✅ Reporte guardado en MongoDB"
                         enviarConfirmacionAReloj()
-                    }
-                } else {
-                    Log.e("ERROR_BD", "Error servidor: ${response.code}")
-                    runOnUiThread {
-                        lblStatus.text = "⚠️ Error Servidor: ${response.code}"
                     }
                 }
                 response.close()

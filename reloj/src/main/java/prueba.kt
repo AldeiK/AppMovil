@@ -28,6 +28,12 @@ class Prueba : Activity(), SensorEventListener, MessageClient.OnMessageReceivedL
     private lateinit var txtLuz: TextView
     private lateinit var txtStatus: TextView
 
+    // Valores temporales
+    private var vRitmo = "0"
+    private var vMov = "0"
+    private var vLuz = "0"
+    private var ultimoEnvio: Long = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.prueba)
@@ -67,29 +73,34 @@ class Prueba : Activity(), SensorEventListener, MessageClient.OnMessageReceivedL
 
     override fun onSensorChanged(event: SensorEvent) {
         val valor = event.values[0]
-        var tipoSensor = ""
 
         when (event.sensor.type) {
             Sensor.TYPE_HEART_RATE -> {
-                tipoSensor = "Corazon"
-                txtRitmo.text = "❤️ Ritmo: ${valor.toInt()}"
+                vRitmo = valor.toInt().toString()
+                txtRitmo.text = "❤️ Ritmo: $vRitmo"
             }
             Sensor.TYPE_ACCELEROMETER -> {
-                tipoSensor = "Movimiento"
-                txtMov.text = "⌚ Mov: ${String.format("%.1f", valor)}"
+                vMov = String.format("%.1f", valor)
+                txtMov.text = "⌚ Mov: $vMov"
             }
             Sensor.TYPE_LIGHT -> {
-                tipoSensor = "Luz"
-                txtLuz.text = "💡 Luz: ${valor.toInt()}"
+                vLuz = valor.toInt().toString()
+                txtLuz.text = "💡 Luz: $vLuz"
             }
         }
-        enviarACelular("$tipoSensor:$valor")
+
+        // ENVIAR LOS 3 JUNTOS cada 5 segundos
+        val ahora = System.currentTimeMillis()
+        if (ahora - ultimoEnvio > 5000) {
+            ultimoEnvio = ahora
+            enviarACelular("$vRitmo:$vMov:$vLuz")
+        }
     }
 
     private fun enviarACelular(dato: String) {
         Wearable.getNodeClient(this).connectedNodes.addOnSuccessListener { nodes ->
             for (node in nodes) {
-                Wearable.getMessageClient(this).sendMessage(node.id, "/sensores", dato.toByteArray(StandardCharsets.UTF_8))
+                Wearable.getMessageClient(this).sendMessage(node.id, "/sensores_triples", dato.toByteArray(StandardCharsets.UTF_8))
             }
         }
     }
